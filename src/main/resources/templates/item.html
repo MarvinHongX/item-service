@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+    </style>
+    <title>Item Detail</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Item Detail</h2>
+    </div>
+    <h2 th:if="${param.status}" th:text="'successfully saved!'"></h2>
+    <div>
+        <label for="id">Item ID</label>
+        <input type="text" id="id" name="id" class="form-control" th:value="${item.id}" readonly>
+    </div>
+    <div>
+        <label for="itemName">Item Name</label>
+        <input type="text" id="itemName" name="itemName" class="form-control" th:value="${item.itemName}" readonly>
+    </div>
+    <div>
+        <label for="price">Price</label>
+        <input type="text" id="price" name="price" class="form-control" th:value="${item.price}" readonly>
+    </div>
+    <div>
+        <label for="quantity">Quantity</label>
+        <input type="text" id="quantity" name="quantity" class="form-control" th:value="${item.quantity}" readonly>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" th:onclick="|location.href='@{/item/{itemId}/edit(itemId=${item.id})}'|" type="button">Edit</button>
+        </div>
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/}'|" type="button">Item List</button>
+        </div>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>

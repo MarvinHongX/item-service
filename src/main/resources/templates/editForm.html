@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .container {
+          max-width: 560px;
+        }
+    </style>
+    <title>Edit Item</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Edit Item</h2>
+    </div>
+    <form th:action method="post">
+        <div>
+            <label for="id">Item ID</label>
+            <input type="text" id="id" name="id" class="form-control" th:value="${item.id}" readonly>
+        </div>
+        <div>
+            <label for="itemName">Item Name</label>
+            <input type="text" id="itemName" name="itemName" class="form-control" th:value="${item.itemName}" required>
+        </div>
+        <div>
+            <label for="price">Price</label>
+            <input type="text" id="price" name="price" class="form-control" th:value="${item.price}" required>
+        </div>
+        <div>
+            <label for="quantity">Quantity</label>
+            <input type="text" id="quantity" name="quantity" class="form-control" th:value="${item.quantity}">
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/item/{itemId}(itemId=${item.id})}'|" type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</div> <!-- /container -->
+</body>
+</html>

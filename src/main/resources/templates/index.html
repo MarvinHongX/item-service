@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 600px;
+        }
+    </style>
+    <title>Item List</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Item List</h2>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary float-end" th:onclick="|location.href='@{/add}'|" type="button">Add</button>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td><a th:href="@{|/item/${item.id}|}" th:text="${item.id}">Item ID</a></td>
+                    <td><a th:href="@{|/item/${item.id}|}" th:text="${item.itemName}">Item Name</a></td>
+                    <td th:text="${item.price}">0</td>
+                    <td th:text="${item.quantity}">1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> <!-- /container -->
+
+</body>
+</html>
