@@ -1,23 +1,48 @@
 package hello.itemservice.web.item;
 
-import hello.itemservice.domain.item.Item;
-import hello.itemservice.domain.item.ItemParamDto;
-import hello.itemservice.domain.item.ItemRepository;
+import hello.itemservice.domain.item.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Controller
 @RequestMapping
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemRepository itemRepository;
 
+    @ModelAttribute("regions")
+    public Map<String, String> regions() {
+        Map<String, String> regions = new LinkedHashMap<>();
+        regions.put("SEOUL", "Seoul");
+        regions.put("BUSAN", "Busan");
+        regions.put("JEJU", "Jeju");
+        return regions;
+    }
+
+    @ModelAttribute("itemTypes")
+    public ItemType[] itemTypes() {
+        return ItemType.values();
+    }
+
+    @ModelAttribute("deliveryCodes")
+    public List<DeliveryCode> deliveryCodes() {
+        List<DeliveryCode> deliveryCodes = new ArrayList<>();
+        deliveryCodes.add(new DeliveryCode("FAST", "Express Shipping"));
+        deliveryCodes.add(new DeliveryCode("NORMAL", "Standard Shipping"));
+        deliveryCodes.add(new DeliveryCode("SLOW", "Economy Shipping"));
+        return deliveryCodes;
+    }
     @GetMapping("/")
     public String items(Model model) {
         List<Item> items = itemRepository.findAll();
@@ -42,7 +67,8 @@ public class ItemController {
     }
 
     @GetMapping("/add")
-    public String addForm() {
+    public String addForm(Model model) {
+        model.addAttribute("item", new ItemParamDto());
         return "addForm";
     }
 
@@ -90,7 +116,9 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    public String addV7(Item item, RedirectAttributes redirectAttributes) {
+    public String addV7(ItemParamDto itemParamDto, RedirectAttributes redirectAttributes) {
+        Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
+        item.updateItem(itemParamDto);
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("id", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
