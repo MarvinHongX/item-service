@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -13,65 +13,65 @@
 <body>
 <div class="container">
     <div class="py-5 text-center">
-        <h2>Edit Item</h2>
+        <h2 th:text="#{page.editItem}"></h2>
     </div>
     <form th:action th:object="${item}" method="post">
         <div>
-            <label for="id">Item ID</label>
+            <label for="id" th:text="#{label.item.id}"></label>
             <input type="text" class="form-control" th:field="*{id}" readonly>
         </div>
         <div>
-            <label for="itemName">Item Name</label>
+            <label for="itemName" th:text="#{label.item.itemName}"></label>
             <input type="text" class="form-control" th:value="*{itemName}" required>
         </div>
         <div>
-            <label for="price">Price</label>
+            <label for="price" th:text="#{label.item.price}"></label>
             <input type="text" class="form-control" th:value="*{price}" required>
         </div>
         <div>
-            <label for="quantity">Quantity</label>
+            <label for="quantity" th:text="#{label.item.quantity}"></label>
             <input type="text" class="form-control" th:value="*{quantity}">
         </div>
 
         <hr class="my-4">
 
         <div>
-            <div>On sale</div>
+            <div th:text="#{label.item.onSale}"></div>
             <div class="form-check">
                 <input type="checkbox" id="onSale" th:field="*{onSale}" class="form-check-input">
-                <label for="onSale" class="form-check-label">on sale</label>
+                <label for="onSale" class="form-check-label" th:text="#{label.item.onSale}"></label>
             </div>
         </div>
         <div>
-            <div>Regions</div>
+            <div th:text="#{label.item.regions}"></div>
             <div th:each="region : ${regions}" class="form-check form-check-inline">
                 <input type="checkbox" th:field="*{regions}" th:value="${region.key}" class="form-check-input" >
                 <label th:for="${#ids.prev('regions')}" th:text="${region.value}" class="form-check-lable">no region</label>
             </div>
         </div>
         <div>
-            <div>Item Types</div>
+            <div th:text="#{label.item.itemTypes}"></div>
             <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
-                <input type="radio" th:field="*{itemType}" th:value="${type.name()}" class="form-check-input">
-                <label th:for="${#ids.prev('itemType')}" th:text="${type.description}" class="form-check-label" >
+                <input type="radio" th:field="*{itemType}" th:value="${type.name}" class="form-check-input">
+                <label th:for="${#ids.prev('itemType')}" th:text="${type.description}" class="form-check-label">
                     no item
                 </label>
             </div>
         </div>
         <div>
-            <div>Delivery Types</div>
+            <div th:text="#{label.item.deliveryTypes}"></div>
             <select th:field="*{deliveryCode}" class="form-select">
-                <option value="">== Select Delivery Type ==</option>
+                <option value="" th:text="#{label.item.selectDeliveryTypes}"></option>
                 <option th:each="deliveryCode : ${deliveryCodes}" th:value="${deliveryCode.code}" th:text="${deliveryCode.displayName}">No delivery type</option>
             </select>
         </div>
         <hr class="my-4">
         <div class="row">
             <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit">Save</button>
+                <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.save}"></button>
             </div>
             <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/item/{itemId}(itemId=${item.id})}'|" type="button">Cancel</button>
+                <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/item/{itemId}(itemId=${item.id})}'|" type="button" th:text="#{button.cancel}"></button>
             </div>
         </div>
     </form>

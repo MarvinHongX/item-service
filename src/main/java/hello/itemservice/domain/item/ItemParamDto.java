@@ -18,4 +18,5 @@ public class ItemParamDto {
 
     public ItemParamDto() {
     }
+
 }

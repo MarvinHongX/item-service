@@ -5,11 +5,9 @@ import lombok.Getter;
 public enum ItemType {
     BOOK("book"), FOOD("food"), ETC("etc");
 
-    @Getter private final String description;
+    @Getter private final String key;
 
-    ItemType(String description) {
-        this.description = description;
+    ItemType(String key) {
+        this.key = key;
     }
-
-
 }

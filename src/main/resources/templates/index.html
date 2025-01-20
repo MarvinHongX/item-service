@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -13,11 +13,11 @@
 <body>
 <div class="container">
     <div class="py-5 text-center">
-        <h2>Item List</h2>
+        <h2 th:text="#{page.items}"></h2>
     </div>
     <div class="row">
         <div class="col">
-            <button class="btn btn-primary float-end" th:onclick="|location.href='@{/add}'|" type="button">Add</button>
+            <button class="btn btn-primary float-end" th:onclick="|location.href='@{/add}'|" type="button" th:text="#{button.add}"></button>
         </div>
     </div>
     <hr class="my-4">
@@ -25,10 +25,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Item ID</th>
-                    <th>Item Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
+                    <th th:text="#{label.item.id}"></th>
+                    <th th:text="#{label.item.itemName}"></th>
+                    <th th:text="#{label.item.price}"></th>
+                    <th th:text="#{label.item.quantity}"></th>
                 </tr>
             </thead>
             <tbody>
