@@ -9,6 +9,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,6 +26,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemRepository itemRepository;
+    private final ItemValidator itemValidator;
+
+    @InitBinder("itemParamDto")
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(itemValidator);
+    }
 
     @Autowired
     private MessageSource messageSource;
@@ -158,8 +170,79 @@ public class ItemController {
         return "redirect:/item/" + item.getId();
     }
 
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addV7(ItemParamDto itemParamDto, RedirectAttributes redirectAttributes) {
+        Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
+        item.updateItem(itemParamDto);
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("id", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        return "redirect:/item/{id}";
+    }
+
+//    @PostMapping("/add")
+    public String addV8(@ModelAttribute("item") ItemParamDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        // 특정 필드 검증 로직
+        if (!StringUtils.hasText(itemParamDto.getItemName())) {
+            bindingResult.addError(new FieldError("item", "itemName", itemParamDto.getItemName(), false, new String[]{"required.item.itemName"}, null, null));
+        }
+        if (itemParamDto.getPrice() == null || itemParamDto.getPrice() < 1000 || itemParamDto.getPrice() > 1000000) {
+            bindingResult.addError(new FieldError("item", "price", itemParamDto.getPrice(), false, new String[]{"range.item.price"}, new Object[]{"1,000", "1,000,000"}, null));
+        }
+        if (itemParamDto.getQuantity() == null || itemParamDto.getQuantity() < 1 || itemParamDto.getQuantity() > 10000) {
+            bindingResult.addError(new FieldError("item", "quantity", itemParamDto.getQuantity(), false, new String[]{"range.item.quantity"}, new Object[]{"1", "10,000"}, null));
+        }
+
+        // 복합 룰 검증 로직
+        if (itemParamDto.getPrice() != null && itemParamDto.getQuantity() != null) {
+            int amount = itemParamDto.getPrice() * itemParamDto.getQuantity();
+            if (amount < 10000) {
+                bindingResult.addError(new ObjectError("item", new String[]{"minAmount"}, new Object[]{"10,000", amount}, null));
+            }
+        }
+
+        // 검증에 실패하면 다시 입력 폼으로
+        if (bindingResult.hasErrors()) {
+            return "addForm";
+        }
+
+        // 정상 로직
+        Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
+        item.updateItem(itemParamDto);
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("id", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        return "redirect:/item/{id}";
+    }
+
+//    @PostMapping("/add")
+    public String addV9(@ModelAttribute("item") ItemParamDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (itemValidator.supports(itemParamDto.getClass())) {
+            itemValidator.validate(itemParamDto, bindingResult);
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "addForm";
+        }
+
+        // 정상 로직
+        Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
+        item.updateItem(itemParamDto);
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("id", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        return "redirect:/item/{id}";
+    }
+
+    @PostMapping("/add")
+    public String addV10(@Validated @ModelAttribute("item") ItemParamDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "addForm";
+        }
+
         Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
         item.updateItem(itemParamDto);
         Item savedItem = itemRepository.save(item);

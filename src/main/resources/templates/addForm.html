@@ -7,6 +7,10 @@
         .container {
           max-width: 560px;
         }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
     </style>
     <title>Add Item</title>
 </head>
@@ -16,17 +20,38 @@
         <h2 th:text="#{page.addItem}"></h2>
     </div>
     <form th:action="@{/add}" th:object="${item}" method="post">
+        <div class="field-error" th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+        </div>
         <div>
             <label for="itemName" th:text="#{label.item.itemName}"></label>
-            <input type="text" th:field="*{itemName}" class="form-control" th:placeholder="#{placeholder.itemName}" required>
+            <input type="text"
+                   id="itemName"
+                   th:field="*{itemName}"
+                   th:errorclass="field-error"
+                   class="form-control"
+                   th:placeholder="#{placeholder.itemName}">
+            <div class="field-error" th:errors="*{itemName}"></div>
         </div>
         <div>
             <label for="price" th:text="#{label.item.price}"></label>
-            <input type="text" th:field="*{price}" class="form-control" placeholder="Enter the price" th:placeholder="#{placeholder.price}" required>
+            <input type="text"
+                   id="price"
+                   th:field="*{price}"
+                   th:errorclass="field-error"
+                   class="form-control"
+                   placeholder="Enter the price" th:placeholder="#{placeholder.price}">
+            <div class="field-error" th:errors="*{price}"></div>
         </div>
         <div>
             <label for="quantity" th:text="#{label.item.quantity}"></label>
-            <input type="text" th:field="*{quantity}" class="form-control" th:placeholder="#{placeholder.quantity}">
+            <input type="text"
+                   id="quantity"
+                   th:field="*{quantity}"
+                   th:errorclass="field-error"
+                   class="form-control"
+                   th:placeholder="#{placeholder.quantity}">
+            <div class="field-error" th:errors="*{quantity}"></div>
         </div>
 
         <hr class="my-4">
