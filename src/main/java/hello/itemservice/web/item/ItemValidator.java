@@ -1,6 +1,6 @@
 package hello.itemservice.web.item;
 
-import hello.itemservice.domain.item.ItemParamDto;
+import hello.itemservice.domain.item.ItemSaveDto;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -11,12 +11,12 @@ public class ItemValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return ItemParamDto.class.isAssignableFrom(clazz);  // Item이 아닌 ItemParamDto만 지원
+        return ItemSaveDto.class.isAssignableFrom(clazz);  // Item이 아닌 ItemParamDto만 지원
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        ItemParamDto itemParamDto = (ItemParamDto) target;
+        ItemSaveDto itemParamDto = (ItemSaveDto) target;
 
         // 특정 필드 검증 로직
         if (!StringUtils.hasText(itemParamDto.getItemName())) {

@@ -52,7 +52,7 @@ class ItemRepositoryTest {
         Long itemId = savedItem.getId();
 
         // when
-        ItemParamDto updateParam = new ItemParamDto();
+        ItemSaveDto updateParam = new ItemSaveDto();
         updateParam.setItemName("itemB");
         updateParam.setPrice(5000);
         updateParam.setQuantity(5);

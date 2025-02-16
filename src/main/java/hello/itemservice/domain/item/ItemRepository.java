@@ -28,9 +28,11 @@ public class ItemRepository {
         return new ArrayList<>(store.values());
     }
 
-    public void update(Long id, ItemParamDto itemParamDto) {
-        Item findItem = findById(id);
-        findItem.updateItem(itemParamDto);
+    public void update(ItemUpdateDto itemParamDto) {
+        if (store.containsKey(itemParamDto.getId())) {
+            Item findItem = findById(itemParamDto.getId());
+            findItem.updateItem(itemParamDto);
+        }
     }
 
     public void clearStore() {

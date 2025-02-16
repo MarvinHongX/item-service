@@ -18,19 +18,19 @@
     <h2 th:if="${param.status}" th:text="#{label.successfullySaved}"></h2>
     <div>
         <label for="id" th:text="#{label.item.id}"></label>
-        <input type="text" id="id" name="id" class="form-control" th:value="${item.id}" readonly>
+        <input type="text" id="id" name="id" class="form-control" th:value="${item.id}" disabled>
     </div>
     <div>
         <label for="itemName" th:text="#{label.item.itemName}"></label>
-        <input type="text" id="itemName" name="itemName" class="form-control" th:value="${item.itemName}" readonly>
+        <input type="text" id="itemName" name="itemName" class="form-control" th:value="${item.itemName}" disabled>
     </div>
     <div>
         <label for="price" th:text="#{label.item.price}"></label>
-        <input type="text" id="price" name="price" class="form-control" th:value="${item.price}" readonly>
+        <input type="text" id="price" name="price" class="form-control" th:value="${item.price}" disabled>
     </div>
     <div>
         <label for="quantity" th:text="#{label.item.quantity}"></label>
-        <input type="text" id="quantity" name="quantity" class="form-control" th:value="${item.quantity}" readonly>
+        <input type="text" id="quantity" name="quantity" class="form-control" th:value="${item.quantity}" disabled>
     </div>
     <hr class="my-4">
 

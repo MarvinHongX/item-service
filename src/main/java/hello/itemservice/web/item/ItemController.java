@@ -85,32 +85,32 @@ public class ItemController {
      */
     @PostConstruct
     public void init() {
-        Item testA = new Item("testA", 10000, 10);
-        Item testB = new Item("testB", 20000, 20);
-
         List<String> regions = new ArrayList<>(Arrays.asList("SEOUL", "BUSAN"));
 
-        ItemParamDto testADto = new ItemParamDto();
-        testADto.setItemName(testA.getItemName());
-        testADto.setPrice(testA.getPrice());
-        testADto.setQuantity(testA.getQuantity());
+        ItemSaveDto testADto = new ItemSaveDto();
+        testADto.setItemName("testA");
+        testADto.setPrice(10000);
+        testADto.setQuantity(10);
         testADto.setOnSale(true);
         testADto.setRegions(regions);
         testADto.setItemType(ItemType.ETC);
         testADto.setDeliveryCode("NORMAL");
-        testA.updateItem(testADto);
 
-        ItemParamDto testBDto = new ItemParamDto();
-        testBDto.setItemName(testB.getItemName());
-        testBDto.setPrice(testB.getPrice());
-        testBDto.setQuantity(testB.getQuantity());
+        Item testA = new Item(testADto.getItemName(), testADto.getPrice(), testADto.getQuantity());
+        testA.saveItem(testADto);
+        itemRepository.save(testA);
+
+        ItemSaveDto testBDto = new ItemSaveDto();
+        testBDto.setItemName("testB");
+        testBDto.setPrice(20000);
+        testBDto.setQuantity(20);
         testBDto.setOnSale(false);
         testBDto.setRegions(regions);
         testBDto.setItemType(ItemType.FOOD);
         testBDto.setDeliveryCode("SLOW");
-        testB.updateItem(testBDto);
 
-        itemRepository.save(testA);
+        Item testB = new Item(testBDto.getItemName(), testBDto.getPrice(), testBDto.getQuantity());
+        testB.saveItem(testBDto);
         itemRepository.save(testB);
     }
 
@@ -123,7 +123,7 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm(Model model) {
-        model.addAttribute("item", new ItemParamDto());
+        model.addAttribute("item", new ItemSaveDto());
         return "addForm";
     }
 
@@ -171,9 +171,9 @@ public class ItemController {
     }
 
 //    @PostMapping("/add")
-    public String addV7(ItemParamDto itemParamDto, RedirectAttributes redirectAttributes) {
+    public String addV7(ItemSaveDto itemParamDto, RedirectAttributes redirectAttributes) {
         Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
-        item.updateItem(itemParamDto);
+        item.saveItem(itemParamDto);
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("id", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
@@ -182,7 +182,7 @@ public class ItemController {
     }
 
 //    @PostMapping("/add")
-    public String addV8(@ModelAttribute("item") ItemParamDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addV8(@ModelAttribute("item") ItemSaveDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         // 특정 필드 검증 로직
         if (!StringUtils.hasText(itemParamDto.getItemName())) {
             bindingResult.addError(new FieldError("item", "itemName", itemParamDto.getItemName(), false, new String[]{"required.item.itemName"}, null, null));
@@ -195,12 +195,7 @@ public class ItemController {
         }
 
         // 복합 룰 검증 로직
-        if (itemParamDto.getPrice() != null && itemParamDto.getQuantity() != null) {
-            int amount = itemParamDto.getPrice() * itemParamDto.getQuantity();
-            if (amount < 10000) {
-                bindingResult.addError(new ObjectError("item", new String[]{"minAmount"}, new Object[]{"10,000", amount}, null));
-            }
-        }
+        objectReject(itemParamDto.getPrice(), itemParamDto.getQuantity(), bindingResult);
 
         // 검증에 실패하면 다시 입력 폼으로
         if (bindingResult.hasErrors()) {
@@ -209,7 +204,7 @@ public class ItemController {
 
         // 정상 로직
         Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
-        item.updateItem(itemParamDto);
+        item.saveItem(itemParamDto);
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("id", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
@@ -218,7 +213,7 @@ public class ItemController {
     }
 
 //    @PostMapping("/add")
-    public String addV9(@ModelAttribute("item") ItemParamDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addV9(@ModelAttribute("item") ItemSaveDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (itemValidator.supports(itemParamDto.getClass())) {
             itemValidator.validate(itemParamDto, bindingResult);
         }
@@ -227,9 +222,8 @@ public class ItemController {
             return "addForm";
         }
 
-        // 정상 로직
         Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
-        item.updateItem(itemParamDto);
+        item.saveItem(itemParamDto);
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("id", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
@@ -238,13 +232,15 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    public String addV10(@Validated @ModelAttribute("item") ItemParamDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String addV10(@Validated @ModelAttribute("item") ItemSaveDto itemParamDto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        objectReject(itemParamDto.getPrice(), itemParamDto.getQuantity(), bindingResult);
+
         if (bindingResult.hasErrors()) {
             return "addForm";
         }
 
         Item item = new Item(itemParamDto.getItemName(), itemParamDto.getPrice(), itemParamDto.getQuantity());
-        item.updateItem(itemParamDto);
+        item.saveItem(itemParamDto);
         Item savedItem = itemRepository.save(item);
         redirectAttributes.addAttribute("id", savedItem.getId());
         redirectAttributes.addAttribute("status", true);
@@ -255,14 +251,40 @@ public class ItemController {
     @GetMapping("/item/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Item findItem = itemRepository.findById(id);
-        model.addAttribute("item", findItem);
+
+        ItemUpdateDto itemParamDto = new ItemUpdateDto();
+        itemParamDto.setId(findItem.getId());
+        itemParamDto.setItemName(findItem.getItemName());
+        itemParamDto.setPrice(findItem.getPrice());
+        itemParamDto.setQuantity(findItem.getQuantity());
+        itemParamDto.setOnSale(findItem.getOnSale());
+        itemParamDto.setRegions(findItem.getRegions());
+        itemParamDto.setItemType(findItem.getItemType());
+        itemParamDto.setDeliveryCode(findItem.getDeliveryCode());
+
+        model.addAttribute("item", itemParamDto);
         return "editForm";
     }
 
     @PostMapping("/item/{id}/edit")
-    public String edit(@PathVariable Long id, @ModelAttribute ItemParamDto itemParamDto) {
-        itemRepository.update(id, itemParamDto);
+    public String edit(@PathVariable Long id, @Validated @ModelAttribute("item") ItemUpdateDto itemParamDto, BindingResult bindingResult) {
+        objectReject(itemParamDto.getPrice(), itemParamDto.getQuantity(), bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "editForm";
+        }
+
+        itemRepository.update(itemParamDto);
         return "redirect:/item/{id}";
+    }
+
+    private static void objectReject(Integer itemParamDto, Integer itemParamDto1, BindingResult bindingResult) {
+        if (itemParamDto != null && itemParamDto1 != null) {
+            long amount = (long) itemParamDto * itemParamDto1;
+            if (amount < 10000) {
+                bindingResult.addError(new ObjectError("item", new String[]{"minAmount"}, new Object[]{"10,000", amount}, null));
+            }
+        }
     }
 }
 

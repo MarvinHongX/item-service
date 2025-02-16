@@ -23,7 +23,31 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public void updateItem(ItemParamDto itemParamDto) {
+    public void saveItem(ItemSaveDto itemParamDto) {
+        if (itemParamDto.getItemName() != null) {
+            this.itemName = itemParamDto.getItemName();
+        }
+        if (itemParamDto.getPrice() != null) {
+            this.price = itemParamDto.getPrice();
+        }
+        if (itemParamDto.getQuantity() != null) {
+            this.quantity = itemParamDto.getQuantity();
+        }
+        if (itemParamDto.getOnSale() != null) {
+            this.onSale = itemParamDto.getOnSale();
+        }
+        if (itemParamDto.getRegions() != null) {
+            this.regions = itemParamDto.getRegions();
+        }
+        if (itemParamDto.getItemType() != null) {
+            this.itemType = itemParamDto.getItemType();
+        }
+        if (itemParamDto.getDeliveryCode() != null) {
+            this.deliveryCode = itemParamDto.getDeliveryCode();
+        }
+    }
+
+    public void updateItem(ItemUpdateDto itemParamDto) {
         if (itemParamDto.getItemName() != null) {
             this.itemName = itemParamDto.getItemName();
         }
