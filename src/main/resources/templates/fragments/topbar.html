@@ -1,0 +1,14 @@
+<div th:fragment="topbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand">Item Service</a>
+
+            <div class="d-flex align-items-center ms-auto">
+                <span class="navbar-text fw-bold me-3" th:text="${loginMember.name}">User Name</span>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button class="btn btn-link p-0 text-decoration-none" type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>

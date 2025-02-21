@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
@@ -15,7 +16,7 @@
     <title>Add Item</title>
 </head>
 <body>
-<div class="container">
+<div layout:fragment="content" class="container">
     <div class="py-5 text-center">
         <h2 th:text="#{page.addItem}"></h2>
     </div>
@@ -30,7 +31,7 @@
                    th:field="*{itemName}"
                    th:errorclass="field-error"
                    class="form-control"
-                   th:placeholder="#{placeholder.itemName}">
+                   th:placeholder="#{placeholder.item.itemName}">
             <div class="field-error" th:errors="*{itemName}"></div>
         </div>
         <div>
@@ -40,7 +41,7 @@
                    th:field="*{price}"
                    th:errorclass="field-error"
                    class="form-control"
-                   placeholder="Enter the price" th:placeholder="#{placeholder.price}">
+                   placeholder="Enter the price" th:placeholder="#{placeholder.item.price}">
             <div class="field-error" th:errors="*{price}"></div>
         </div>
         <div>
@@ -50,7 +51,7 @@
                    th:field="*{quantity}"
                    th:errorclass="field-error"
                    class="form-control"
-                   th:placeholder="#{placeholder.quantity}">
+                   th:placeholder="#{placeholder.item.quantity}">
             <div class="field-error" th:errors="*{quantity}"></div>
         </div>
 

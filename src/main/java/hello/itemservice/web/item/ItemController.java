@@ -2,6 +2,7 @@ package hello.itemservice.web.item;
 
 import hello.itemservice.domain.item.*;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -278,9 +279,9 @@ public class ItemController {
         return "redirect:/item/{id}";
     }
 
-    private static void objectReject(Integer itemParamDto, Integer itemParamDto1, BindingResult bindingResult) {
-        if (itemParamDto != null && itemParamDto1 != null) {
-            long amount = (long) itemParamDto * itemParamDto1;
+    private static void objectReject(Integer price, Integer quantity, BindingResult bindingResult) {
+        if (price != null && quantity != null) {
+            long amount = (long) price * quantity;
             if (amount < 10000) {
                 bindingResult.addError(new ObjectError("item", new String[]{"minAmount"}, new Object[]{"10,000", amount}, null));
             }

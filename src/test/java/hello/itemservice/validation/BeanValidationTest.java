@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-public class BeanValidationTest {
+class BeanValidationTest {
     
     @Test
     void beanValidation() {

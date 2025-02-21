@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 560px;
+    }
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+  </style>
+  <title>Login</title>
+</head>
+<body>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2 th:text="#{page.loginMember}"></h2>
+  </div>
+  <form th:action="@{/login}" th:object="${loginDto}" method="post">
+    <div class="field-error" th:if="${#fields.hasGlobalErrors()}">
+      <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+    </div>
+    <div>
+      <label for="loginId" th:text="#{label.member.loginId}"></label>
+      <input type="text"
+             id="loginId"
+             th:field="*{loginId}"
+             th:errorclass="field-error"
+             class="form-control"
+             th:placeholder="#{placeholder.member.loginId}">
+      <div class="field-error" th:errors="*{loginId}"></div>
+    </div>
+    <div>
+      <label for="password" th:text="#{label.member.password}"></label>
+      <input type="password"
+             id="password"
+             th:field="*{password}"
+             th:errorclass="field-error"
+             class="form-control"
+             th:placeholder="#{placeholder.member.password}">
+      <div class="field-error" th:errors="*{password}"></div>
+    </div>
+
+    <hr class="my-4">
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.login}"></button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/members/add}'|" type="button" th:text="#{button.signUp}"></button>
+      </div>
+    </div>
+  </form>
+</div> <!-- /container -->
+</body>
+</html>

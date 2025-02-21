@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 560px;
+    }
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
+  </style>
+  <title>Sign up</title>
+</head>
+<body>
+<div class="container">
+  <div class="py-5 text-center">
+    <h2 th:text="#{page.signUpMember}"></h2>
+  </div>
+  <form th:action="@{/members/add}" th:object="${member}" method="post">
+    <div class="field-error" th:if="${#fields.hasGlobalErrors()}">
+      <p th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+    </div>
+    <div>
+      <label for="loginId" th:text="#{label.member.loginId}"></label>
+      <input type="text"
+             id="loginId"
+             th:field="*{loginId}"
+             th:errorclass="field-error"
+             class="form-control"
+             th:placeholder="#{placeholder.member.loginId}">
+      <div class="field-error" th:errors="*{loginId}"></div>
+    </div>
+    <div>
+      <label for="password" th:text="#{label.member.password}"></label>
+      <input type="password"
+             id="password"
+             th:field="*{password}"
+             th:errorclass="field-error"
+             class="form-control"
+             th:placeholder="#{placeholder.member.password}">
+      <div class="field-error" th:errors="*{password}"></div>
+    </div>
+    <div>
+      <label for="name" th:text="#{label.member.name}"></label>
+      <input type="text"
+             id="name"
+             th:field="*{name}"
+             th:errorclass="field-error"
+             class="form-control"
+             th:placeholder="#{placeholder.member.name}">
+      <div class="field-error" th:errors="*{name}"></div>
+    </div>
+
+    <hr class="my-4">
+    <div class="row">
+      <div class="col">
+        <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.add}"></button>
+      </div>
+      <div class="col">
+        <button class="w-100 btn btn-secondary btn-lg" th:onclick="|location.href='@{/}'|" type="button" th:text="#{button.cancel}"></button>
+      </div>
+    </div>
+  </form>
+</div> <!-- /container -->
+</body>
+</html>
