@@ -30,23 +30,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
             loginMember = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         }
 
-        // 로그인/로그아웃 페이지는 통과
-        if (requestURI.startsWith("/login") || requestURI.startsWith("/logout")) {
-            return true;
-        }
-
         // 쿠키가 없으면
         if (loginMember == null) {
-            if (requestURI.startsWith("/members/add")) {
-                return true;
-            }
-            response.sendRedirect("/login");
-            return false;
-        }
-
-        // 쿠키가 있으면
-        if (requestURI.startsWith("/members/add")) {
-            response.sendRedirect("/");
+            response.sendRedirect("/login?redirectURL=" + requestURI);
             return false;
         }
 
